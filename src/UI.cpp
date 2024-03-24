@@ -1,5 +1,6 @@
 #include <DesktopMop/Windows.hpp>
 #include <DesktopMop/WindowState.hpp>
+#include <DesktopMop/Log.hpp>
 
 #include <iostream>
 
@@ -29,13 +30,13 @@ HWND WindowState::CreateListView(HWND hwnd, LPWSTR title, HMENU id, RECT rect){
 	column.fmt = LVCFMT_LEFT;
 
 	if(SendMessageW(listView, LVM_INSERTCOLUMNW, 0, reinterpret_cast<LPARAM>(&column)) == -1){
-		std::wcout << L"Could not insert column into list view." << std::endl;
+		WLOG_ERROR << L"Could not insert column into list view." << std::endl;
 		DestroyWindow(listView);
 		return NULL;
 	}
 
 	if(SendMessageW(listView, LVM_SETCOLUMNWIDTH, 0, LVSCW_AUTOSIZE_USEHEADER) == FALSE){
-		std::wcout << L"Could not set column width of list view." << std::endl;
+		WLOG_ERROR << L"Could not set column width of list view." << std::endl;
 		DestroyWindow(listView);
 		return NULL;
 	}

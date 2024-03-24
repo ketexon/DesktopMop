@@ -13,7 +13,7 @@
 bool WindowState::LockMutex(){
 	DWORD dr = WaitForSingleObject(windowStateMutex, INFINITE);
 	if(dr != WAIT_OBJECT_0 && dr != WAIT_ABANDONED){
-		std::wcout << L"Wait for window state mutex failed. Last Error: " << GetLastError() << std::endl;
+		WLOG_ERROR << L"Wait for window state mutex failed. Last Error: " << GetLastError() << std::endl;
 		PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 		return false;
 	}
@@ -120,7 +120,7 @@ LRESULT WindowState::Create(){
 
 	wchar_t desktopGlob[MAX_PATH];
 	if(PathCombineW(desktopGlob, knownFolders.desktopFolder.c_str(), L"*") == NULL){
-		std::wcout << L"PathCombineW failed. Last Error: " << GetLastError() << std::endl;
+		WLOG_ERROR << L"PathCombineW failed. Last Error: " << GetLastError() << std::endl;
 		PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 	}
 	this->desktopGlob = desktopGlob;
@@ -346,7 +346,7 @@ std::optional<LRESULT> WindowState::HandleMenuCommand(WORD menuId){
 	if(menuId == static_cast<WORD>(MenuIdentifier::AddBlacklistItem) || menuId == static_cast<WORD>(MenuIdentifier::AddWhitelistItem)){
 		if(!LockMutex()) return std::nullopt;
 
-		std::wcout << L"Add item" << std::endl;
+		WLOG_DEBUG << L"Add item" << std::endl;
 		HWND targetHWnd =
 			menuId == static_cast<WORD>(MenuIdentifier::AddBlacklistItem)
 			? blacklistListView
@@ -377,7 +377,7 @@ std::optional<LRESULT> WindowState::HandleMenuCommand(WORD menuId){
 
 		const int newIdx = SendMessageW(targetHWnd, LVM_INSERTITEMW, 0, reinterpret_cast<LPARAM>(&item));
 		if(newIdx == -1){
-			std::wcout << L"Could not insert item.  " << GetLastError() << std::endl;
+			WLOG_ERROR << L"Could not insert item.  " << GetLastError() << std::endl;
 			PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 			return std::nullopt;
 		}
@@ -391,7 +391,7 @@ std::optional<LRESULT> WindowState::HandleMenuCommand(WORD menuId){
 	else if(menuId == static_cast<WORD>(MenuIdentifier::DeleteBlacklistItem) || menuId == static_cast<WORD>(MenuIdentifier::DeleteWhitelistItem)){
 		if(!LockMutex()) return std::nullopt;;
 
-		std::wcout << L"Delete item" << std::endl;
+		WLOG_DEBUG << L"Delete item" << std::endl;
 		HWND targetHWnd =
 			menuId == static_cast<WORD>(MenuIdentifier::DeleteBlacklistItem)
 				? this->blacklistListView
@@ -424,11 +424,11 @@ std::optional<LRESULT> WindowState::HandleMenuCommand(WORD menuId){
 		wchar_t dir[MAX_PATH];
 		PathCombineW(dir, knownFolders.appDataFolder.c_str(), kAppDataName);
 
-		std::wcout << dir << std::endl;
+		WLOG_DEBUG << dir << std::endl;
 
 		HINSTANCE hr = ShellExecuteW(NULL, L"explore", dir, NULL, NULL, SW_NORMAL);
 		if(hr <= reinterpret_cast<HINSTANCE>(32)){
-			std::wcout << L"Could not open explorer (" << hr << L", " << GetLastError() << L")" << std::endl;
+			WLOG_WARNING << L"Could not open explorer (" << hr << L", " << GetLastError() << L")" << std::endl;
 		}
 	}
 	return std::nullopt;
@@ -471,7 +471,7 @@ std::optional<LRESULT> WindowState::HandleNotify(NMHDR* nm){
 
 			HWND edit = reinterpret_cast<HWND>(SendMessageW(nm->hwndFrom, LVM_EDITLABELW, itemActivate->iItem, 0));
 			if(edit == NULL){
-				std::wcout << L"Could not edit label: " << GetLastError() << std::endl;
+				WLOG_ERROR << L"Could not edit label: " << GetLastError() << std::endl;
 				PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 				return std::nullopt;
 			}

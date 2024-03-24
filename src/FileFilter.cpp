@@ -1,6 +1,7 @@
 #include <DesktopMop/Windows.hpp>
 #include <DesktopMop/OnExitScope.hpp>
 #include <DesktopMop/WindowState.hpp>
+#include <DesktopMop/Log.hpp>
 
 #include <iomanip>
 #include <iostream>
@@ -9,7 +10,7 @@ void WindowState::CleanDesktop(){
 	WIN32_FIND_DATAW findData;
 	HANDLE findFileHandle = FindFirstFileW(desktopGlob.c_str(), &findData);
 	if(findFileHandle == INVALID_HANDLE_VALUE){
-		std::wcout << L"FindFirstFileW returned INVALID_HANDLE_VALUE. " << GetLastError() << std::endl;
+		WLOG_ERROR << L"FindFirstFileW returned INVALID_HANDLE_VALUE. " << GetLastError() << std::endl;
 		PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 	}
 
@@ -19,7 +20,7 @@ void WindowState::CleanDesktop(){
 		FilterDesktopFile(&findData);
 	}
 	if(GetLastError() != ERROR_NO_MORE_FILES){
-		std::wcout << L"FindNextFileW returned 0 with error: " << GetLastError() << std::endl;
+		WLOG_ERROR << L"FindNextFileW returned 0 with error: " << GetLastError() << std::endl;
 		PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 	}
 }
@@ -47,7 +48,7 @@ void WindowState::DesktopChangeNotification(BOOLEAN fired){
 		return;
 	}
 	else if(dr == WAIT_FAILED){
-		std::wcout << L"Wait failed. Last Error: " << GetLastError() << std::endl;
+		WLOG_ERROR << L"Wait failed. Last Error: " << GetLastError() << std::endl;
 		PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 		return;
 	}
@@ -58,12 +59,12 @@ bool WindowState::FilterDesktopFile(WIN32_FIND_DATAW* findData){
 	if(name == L"." || name == L".." || (findData->dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) > 0){
 		return false;
 	}
-	std::wcout << findData->cFileName << L" " << std::hex << findData->dwFileAttributes << std::endl;
+	WLOG_DEBUG << findData->cFileName << L" " << std::hex << findData->dwFileAttributes << std::endl;
 	// check if file is whitelisted
 	for(size_t i = 0; i < whiteListedRegex.size(); ++i){
 		const auto& re = whiteListedRegex.at(i);
 		if(std::regex_match(findData->cFileName, re)){
-			std::wcout << std::quoted(findData->cFileName)
+			WLOG_DEBUG << std::quoted(findData->cFileName)
 				<< L" is whitelisted according to regex "
 				<< std::quoted(whiteListedFiles.at(i))
 				<< L". Not deleting."
@@ -75,7 +76,7 @@ bool WindowState::FilterDesktopFile(WIN32_FIND_DATAW* findData){
 	for(size_t i = 0; i < blackListedRegex.size(); ++i){
 		const auto& re = blackListedRegex.at(i);
 		if(std::regex_match(findData->cFileName, re)){
-			std::wcout
+			WLOG_DEBUG
 				<< std::quoted(findData->cFileName)
 				<< L" is blacklisted according to regex "
 				<< std::quoted(blackListedFiles.at(i))

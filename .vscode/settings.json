@@ -1,5 +1,7 @@
 {
 	"files.associations": {
+		"*.yarnproject": "jsonc",
+		".clang-format": "yaml",
 		"fstream": "cpp",
 		"ostream": "cpp",
 		"iosfwd": "cpp",
@@ -61,6 +63,8 @@
 		"locale": "cpp",
 		"regex": "cpp",
 		"xlocbuf": "cpp",
-		"xlocmes": "cpp"
+		"xlocmes": "cpp",
+		"charconv": "cpp",
+		"format": "cpp"
 	}
 }

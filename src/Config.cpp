@@ -46,7 +46,7 @@ std::variant<Config, int> OpenConfig(HANDLE file){
 		if (line.length() != 0) {
 			size_t eqPos = line.find('=');
 			if (eqPos == line.npos){
-				std::wcout << L"Config file: Line " << i << L": " << std::quoted(line) << L" does not have a key" << std::endl;
+				WLOG_WARNING << L"Config file: Line " << i << L": " << std::quoted(line) << L" does not have a key" << std::endl;
 				return 1;
 			}
 			std::wstring key = line.substr(0, eqPos);
@@ -77,7 +77,7 @@ int SaveConfig(HANDLE file, Config config){
 	}
 	std::string content = ss.str();
 	if(WriteFile(file, content.c_str(), content.size(), NULL, NULL) == FALSE){
-		std::wcout << L"Could not save config (" << GetLastError() << L")" << std::endl;
+		WLOG_ERROR << L"Could not save config (" << GetLastError() << L")" << std::endl;
 		return 1;
 	}
 	return 0;

@@ -1,6 +1,7 @@
 #include <DesktopMop/Util.hpp>
 #include <DesktopMop/Windows.hpp>
 #include <DesktopMop/OnExitScope.hpp>
+#include <DesktopMop/Log.hpp>
 
 #include <iostream>
 
@@ -53,7 +54,7 @@ int CreateShellLink(LPCWSTR pathSrc, LPCWSTR pathDst, LPCWSTR description){
 	IShellLinkW* shellLink;
 	hr = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, reinterpret_cast<LPVOID*>(&shellLink));
 	if(FAILED(hr)){
-		std::wcout << L"Could not create CLSID_ShellLink instance" << std::endl;
+		WLOG_ERROR << L"Could not create CLSID_ShellLink instance" << std::endl;
 		return 1;
 	}
 	onExitScope.Add([&](){shellLink->Release();});
@@ -65,13 +66,13 @@ int CreateShellLink(LPCWSTR pathSrc, LPCWSTR pathDst, LPCWSTR description){
 
 	hr = shellLink->QueryInterface(IID_IPersistFile, reinterpret_cast<LPVOID*>(&file));
 	if(FAILED(hr)){
-		std::wcout << L"Could not get IID_IPersistFile from shell link" << std::endl;
+		WLOG_ERROR << L"Could not get IID_IPersistFile from shell link" << std::endl;
 		return 2;
 	}
 
 	hr = file->Save(pathDst, TRUE);
 	if(FAILED(hr)){
-		std::wcout << L"Could not save shell link file." << std::endl;
+		WLOG_ERROR << L"Could not save shell link file." << std::endl;
 		return 3;
 	}
 
