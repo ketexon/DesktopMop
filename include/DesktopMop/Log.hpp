@@ -28,7 +28,12 @@ public:
     NulStreambuf* rdbuf() const { return const_cast<NulStreambuf*>(static_cast<const NulStreambuf*>(this)); }
 };
 
+#if DESKTOPMOP_DEBUG
 #define _WLOG_TRACE << __FILE__ << L"::" << __FUNCTION__ << L"(" << __LINE__ << L"): "
+#else
+#define _WLOG_TRACE
+
+#endif
 
 #if DESKTOPMOP_LOG_LEVEL >= DESKTOPMOP_LOG_LEVEL_DEBUG
 #define WLOG_DEBUG std::wcout _WLOG_TRACE
