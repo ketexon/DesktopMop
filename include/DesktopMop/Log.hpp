@@ -9,58 +9,13 @@
 #define DESKTOPMOP_LOG_LEVEL_ERROR 1
 #define DESKTOPMOP_LOG_LEVEL_OFF 0
 
-class NulStreambuf : public std::streambuf
-{
-private:
-	char dummyBuffer[ 64 ];
-protected:
-    virtual int overflow( int c )
-    {
-        setp(dummyBuffer, dummyBuffer + sizeof(dummyBuffer));
-        return (c == traits_type::eof()) ? '\0' : c;
-    }
-};
-
-class NulOStream : private NulStreambuf, public std::ostream
-{
-public:
-    NulOStream() : std::ostream( this ) {}
-    NulStreambuf* rdbuf() const { return const_cast<NulStreambuf*>(static_cast<const NulStreambuf*>(this)); }
-};
-
 #if DESKTOPMOP_DEBUG
 #define _WLOG_TRACE << __FILE__ << L"::" << __FUNCTION__ << L"(" << __LINE__ << L"): "
 #else
 #define _WLOG_TRACE
-
 #endif
 
-#if DESKTOPMOP_LOG_LEVEL >= DESKTOPMOP_LOG_LEVEL_DEBUG
-#define WLOG_DEBUG std::wcout _WLOG_TRACE
-#else
-#define WLOG_DEBUG NulOStream{}
-#endif
-
-#if DESKTOPMOP_LOG_LEVEL >= DESKTOPMOP_LOG_LEVEL_INFO
-#define WLOG_INFO std::wcout _WLOG_TRACE
-#else
-#define WLOG_INFO NulOStream{}
-#endif
-
-#if DESKTOPMOP_LOG_LEVEL >= DESKTOPMOP_LOG_LEVEL_WARNING
-#define WLOG_WARNING std::wcout _WLOG_TRACE
-#else
-#define WLOG_WARNING NulOStream{}
-#endif
-
-#if DESKTOPMOP_LOG_LEVEL >= DESKTOPMOP_LOG_LEVEL_ERROR
-#define WLOG_ERROR std::wcerr _WLOG_TRACE
-#else
-#define WLOG_ERROR NulOStream{}
-#endif
-
-#if DESKTOPMOP_LOG_LEVEL >= DESKTOPMOP_LOG_LEVEL_ERROR
-#define WLOG_ERROR std::wcerr _WLOG_TRACE
-#else
-#define WLOG_ERROR NulOStream{}
-#endif
+#define WLOG_DEBUG if constexpr(DESKTOPMOP_LOG_LEVEL < DESKTOPMOP_LOG_LEVEL_DEBUG) {} else std::wcout _WLOG_TRACE
+#define WLOG_INFO if constexpr(DESKTOPMOP_LOG_LEVEL < DESKTOPMOP_LOG_LEVEL_INFO) {} else std::wcout _WLOG_TRACE
+#define WLOG_WARNING if constexpr(DESKTOPMOP_LOG_LEVEL < DESKTOPMOP_LOG_LEVEL_WARNING) {} else std::wcout _WLOG_TRACE
+#define WLOG_ERROR if constexpr(DESKTOPMOP_LOG_LEVEL < DESKTOPMOP_LOG_LEVEL_ERROR) {} else std::wcout _WLOG_TRACE
