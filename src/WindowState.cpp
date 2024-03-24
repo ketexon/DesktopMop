@@ -431,6 +431,9 @@ std::optional<LRESULT> WindowState::HandleMenuCommand(WORD menuId){
 			WLOG_WARNING << L"Could not open explorer (" << hr << L", " << GetLastError() << L")" << std::endl;
 		}
 	}
+	else if(menuId == static_cast<WORD>(MenuIdentifier::Help)) {
+		OpenHelp();
+	}
 	return std::nullopt;
 }
 
@@ -438,6 +441,10 @@ std::optional<LRESULT> WindowState::HandleAcceleratorCommand(WORD id){
 	switch(static_cast<AcceleratorIdentifier>(id)){
 		case AcceleratorIdentifier::Exit: {
 			PostQuitMessage(0);
+			return 0;
+		}
+		case AcceleratorIdentifier::Help: {
+			OpenHelp();
 			return 0;
 		}
 	}
@@ -582,5 +589,13 @@ void WindowState::CreateAccelerators(){
 	acceleratorTable = CreateAcceleratorTableW(accelerators.data(), accelerators.size());
 	if(acceleratorTable == NULL){
 		WLOG_ERROR << L"Could not create accelerator table (" << GetLastError() << L")" << std::endl;
+	}
+}
+
+void WindowState::OpenHelp(){
+	HINSTANCE hi = ShellExecuteW(hwnd, L"open", kHelpURL, NULL, NULL, SW_SHOW);
+	// failure condition for ShellExecute
+	if(reinterpret_cast<intptr_t>(hi) <= 32){
+		WLOG_WARNING << L"Could not open help URL (" << hi << L", " << GetLastError() << L")" << std::endl;
 	}
 }

@@ -104,4 +104,6 @@ struct WindowState {
 	LRESULT HandleTrayIconMessage(WORD id, WORD code, int x, int y);
 
 	void DesktopChangeNotification(BOOLEAN fired);
+
+	void OpenHelp();
 };

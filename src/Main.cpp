@@ -49,6 +49,7 @@ HMENU CreateWindowMenu(){
 	breakItemInfo.fType = MFT_SEPARATOR;
 
 
+
 	wcscpy_s(title, L"&File");
 
 	MENUITEMINFOW menuItemInfo;
@@ -66,19 +67,28 @@ HMENU CreateWindowMenu(){
 	menuItemInfo.fMask &= ~MIIM_SUBMENU;
 	menuItemInfo.hSubMenu = NULL;
 
+	int pos = 0;
+
+	wcscpy_s(title, L"&Help\tF1");
+	menuItemInfo.wID = static_cast<UINT>(MenuIdentifier::Help);
+	br = InsertMenuItemW(fileSubMenu, pos++, TRUE, &menuItemInfo);
+
+	br = InsertMenuItemW(fileSubMenu, pos++, TRUE, &breakItemInfo);
+
 	wcscpy_s(title, L"&Open data folder");
 	menuItemInfo.wID = static_cast<UINT>(MenuIdentifier::OpenDataFolder);
-	br = InsertMenuItemW(fileSubMenu, 0, TRUE, &menuItemInfo);
+	br = InsertMenuItemW(fileSubMenu, pos++, TRUE, &menuItemInfo);
+
+	br = InsertMenuItemW(fileSubMenu, pos++, TRUE, &breakItemInfo);
 
 	wcscpy_s(title, L"&Close\tAlt+F4");
 	menuItemInfo.wID = static_cast<UINT>(MenuIdentifier::Close);
-	br = InsertMenuItemW(fileSubMenu, 1, TRUE, &menuItemInfo);
+	br = InsertMenuItemW(fileSubMenu, pos++, TRUE, &menuItemInfo);
 
 	wcscpy_s(title, L"E&xit");
 	menuItemInfo.wID = static_cast<UINT>(MenuIdentifier::Exit);
-	br = InsertMenuItemW(fileSubMenu, 2, TRUE, &menuItemInfo);
+	br = InsertMenuItemW(fileSubMenu, pos++, TRUE, &menuItemInfo);
 
-	br = InsertMenuItemW(fileSubMenu, 1, TRUE, &breakItemInfo);
 
 	return menu;
 }

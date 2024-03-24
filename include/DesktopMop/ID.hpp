@@ -19,6 +19,7 @@ enum class MenuIdentifier : UINT_PTR {
 
 	File,
 	OpenDataFolder,
+	Help,
 	Close,
 	Exit,
 };

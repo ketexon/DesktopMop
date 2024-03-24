@@ -9,3 +9,4 @@ constexpr int kWindowSafeHeight = 420;
 const extern wchar_t* kClassName;
 const extern wchar_t* kWindowName;
 const extern wchar_t* kAppDataName;
+const extern wchar_t* kHelpURL;
