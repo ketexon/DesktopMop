@@ -21,7 +21,7 @@ std::variant<Config, int> OpenConfig(HANDLE file){
 
 	DWORD bytesRead;
 	if(ReadFile(file, buffer.data(), fileSize, &bytesRead, NULL) == FALSE){
-		std::wcout << L"Could not open file. Last error: " << GetLastError() << std::endl;
+		WLOG_ERROR << L"Could not open file. Last error: " << GetLastError() << std::endl;
 		return 1;
 	}
 
@@ -86,11 +86,11 @@ int SaveConfig(HANDLE file, Config config){
 constexpr wchar_t kFileListDelim = L'\30'; // record separator
 
 void WindowState::LoadConfig(){
-	WLOG_DEBUG() << L"Loading config" << std::endl;
+	WLOG_DEBUG << L"Loading config" << std::endl;
 	if(config.contains(L"blacklisted")){
 		std::wstring blacklistedStr = config.at(L"blacklisted");
 		while(blacklistedStr.size() > 0){
-			WLOG_DEBUG() << L"Config contains blacklisted files." << std::endl;
+			WLOG_DEBUG << L"Config contains blacklisted files." << std::endl;
 
 			size_t delimPos = blacklistedStr.find(kFileListDelim);
 			std::wstring entry;
@@ -112,7 +112,7 @@ void WindowState::LoadConfig(){
 	if(config.contains(L"whitelisted")){
 		std::wstring whitelistedStr = config.at(L"whitelisted");
 		while(whitelistedStr.size() > 0){
-			WLOG_DEBUG() << L"Config contains whitelisted files." << std::endl;
+			WLOG_DEBUG << L"Config contains whitelisted files." << std::endl;
 
 			size_t delimPos = whitelistedStr.find(kFileListDelim);
 			std::wstring entry;
@@ -147,7 +147,7 @@ void WindowState::SaveConfig(){
 	config[L"blacklisted"] = blackListedFilesSS.str();
 	config[L"whitelisted"] = whiteListedFilesSS.str();
 
-	WLOG_DEBUG() << L"Saving config..." << std::endl;
+	WLOG_DEBUG << L"Saving config..." << std::endl;
 
 	HANDLE file = CreateFileW(configFilePath.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if(file != INVALID_HANDLE_VALUE){
@@ -155,6 +155,6 @@ void WindowState::SaveConfig(){
 		CloseHandle(file);
 	}
 	else{
-		WLOG_WARNING() << L"Could not open config file (" << GetLastError() << L")" << std::endl;
+		WLOG_WARNING << L"Could not open config file (" << GetLastError() << L")" << std::endl;
 	}
 }

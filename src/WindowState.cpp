@@ -248,7 +248,7 @@ LRESULT WindowState::Create(){
 
 			const int newIdx = SendMessageW(blacklistListView, LVM_INSERTITEMW, 0, reinterpret_cast<LPARAM>(&item));
 			if(newIdx == -1){
-				WLOG_ERROR() << L"Could not insert item into blacklist view (" << GetLastError() << L")" << std::endl;
+				WLOG_ERROR << L"Could not insert item into blacklist view (" << GetLastError() << L")" << std::endl;
 				PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 			}
 		}
@@ -259,7 +259,7 @@ LRESULT WindowState::Create(){
 
 			const int newIdx = SendMessageW(whitelistListView, LVM_INSERTITEMW, 0, reinterpret_cast<LPARAM>(&item));
 			if(newIdx == -1){
-				WLOG_ERROR() << L"Could not insert item into whitelist view (" << GetLastError() << L")" << std::endl;
+				WLOG_ERROR << L"Could not insert item into whitelist view (" << GetLastError() << L")" << std::endl;
 				PostMessageW(hwnd, WM_CLOSE, 1, NULL);
 			}
 		}
@@ -581,6 +581,6 @@ void WindowState::CreateAccelerators(){
 
 	acceleratorTable = CreateAcceleratorTableW(accelerators.data(), accelerators.size());
 	if(acceleratorTable == NULL){
-		WLOG_ERROR() << L"Could not create accelerator table (" << GetLastError() << L")" << std::endl;
+		WLOG_ERROR << L"Could not create accelerator table (" << GetLastError() << L")" << std::endl;
 	}
 }

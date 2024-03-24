@@ -228,7 +228,7 @@ int WindowState::InitializeFiles(){
 
 	HANDLE configFile = CreateFileW(path, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if(configFile == NULL){
-		WLOG_WARNING() << L"Could not open settings.cfg" << std::endl;
+		WLOG_WARNING << L"Could not open settings.cfg" << std::endl;
 		return 1;
 	}
 
@@ -238,7 +238,7 @@ int WindowState::InitializeFiles(){
 			config = *configPointer;
 		}
 		else{
-			WLOG_WARNING() << L"Could not open config file (" << GetLastError() << L")" << std::endl;
+			WLOG_WARNING << L"Could not open config file (" << GetLastError() << L")" << std::endl;
 			return 1;
 		}
 	}
