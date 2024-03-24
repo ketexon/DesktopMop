@@ -552,6 +552,12 @@ std::optional<LRESULT> WindowState::HandleNotify(NMHDR* nm){
 LRESULT WindowState::HandleTrayIconMessage(WORD id, WORD code, int x, int y){
 	if(id == kTrayIconID){
 		if(code == WM_CONTEXTMENU){
+			// the x and y don't seem to be working.
+			// I will keep them in the signature, as they are part of the the "callback"
+			// but will use GetMousePos instead
+			POINT cursorPos;
+			GetCursorPos(&cursorPos);
+
 			HMENU menu = CreatePopupMenu();
 			AppendMenuW(menu, MF_DISABLED | MF_STRING, static_cast<UINT_PTR>(MenuIdentifier::TrayApplicationName), kWindowName);
 			AppendMenuW(menu, MF_SEPARATOR, NULL, NULL);
@@ -559,7 +565,7 @@ LRESULT WindowState::HandleTrayIconMessage(WORD id, WORD code, int x, int y){
 			TrackPopupMenu(
 				menu,
 				TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_NOANIMATION,
-				x, y,
+				cursorPos.x, cursorPos.y,
 				0,
 				hwnd,
 				NULL
