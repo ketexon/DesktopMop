@@ -457,6 +457,7 @@ std::optional<LRESULT> WindowState::HandleControlCommand(WORD id, WORD code, HWN
 
 		if(SendMessageW(controlHWnd, BM_GETCHECK, 0, 0) == BST_CHECKED){
 			started = true;
+			CleanDesktop();
 			SendMessageW(controlHWnd, WM_SETTEXT, 0, reinterpret_cast<LPARAM>(L"Stop"));
 		}
 		else{
