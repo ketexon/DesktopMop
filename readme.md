@@ -2,6 +2,8 @@
 
 DesktopMop is a simple WinAPI GUI Tool that cleans the desktop of certain file patterns. The primary purpose of this is to remove any unwanted shortcuts  (`.lnk` files) created by applications during their installation.
 
+![Demo of DesktopMop](https://github.com/ketexon/DesktopMop/assets/29184562/d409cb43-61d2-447c-8379-6e9b59eae9c3)
+
 ## Building
 
 There will be prebuilt binaries in the releases section.
