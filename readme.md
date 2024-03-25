@@ -6,7 +6,7 @@ DesktopMop is a simple WinAPI GUI Tool that cleans the desktop of certain file p
 
 ## Building
 
-There will be prebuilt binaries in the releases section.
+Prebuilt binaries in the [releases section]([url](https://github.com/ketexon/DesktopMop/releases/latest))
 
 DesktopMop only works on Windows, and it is only tested on Windows 11 64 bit (I'm not sure if it supports 32 bit, but it should work on Windows 10). You will need a C++ compiler supporting C++20 and CMake (the CMakeLists only supports MSVC and maybe clang-cl due to the implicit linking of like `kernel32.lib`, though feel free to PR). I'm not sure if you need to install the Windows SDK, but I don't think so.
 
