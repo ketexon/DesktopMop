@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(DesktopMop LANGUAGES CXX RC)
+project(
+	DesktopMop
+	VERSION 1.0.0
+	LANGUAGES CXX RC
+)
 
 set(
 	DESKTOPMOP_SOURCES
